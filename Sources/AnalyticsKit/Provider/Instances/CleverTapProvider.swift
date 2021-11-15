@@ -25,16 +25,25 @@ class CleverTapProvider: NSObject, ProviderProtocol {
         if let accountId = accountId, let accountToken = accountToken {
             CleverTap.setCredentialsWithAccountID(accountId, andToken: accountToken)
         }
+        CleverTap.setDebugLevel(CleverTapLogLevel.debug.rawValue)
         CleverTap.autoIntegrate()
     }
     
-    func updateUserInfo(_ id: Any, _ name: String?, _ email: String?, _ phone: String?) {
+    func updateUserInfo(
+        _ id: Any,
+        _ name: String?,
+        _ email: String?,
+        _ phone: String?,
+        _ location: CLLocationCoordinate2D?
+    ) {
         var params: [String : Any] = [:]
         params["Identity"] = id
         if let name  = name  { params["Name"]  = name  }
         if let email = email { params["Email"] = email }
         if let phone = phone { params["Phone"] = phone }
         CleverTap.sharedInstance()?.onUserLogin(params)
+        
+        if let location = location { CleverTap.setLocation(location) }
     }
 
 	func setPushToken(deviceToken: Data) {
@@ -67,6 +76,10 @@ class CleverTapProvider: NSObject, ProviderProtocol {
     func handleNotification(with response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping ([AnyHashable : Any]?) -> Void) {
         CleverTap.sharedInstance()?.handleNotification(withData: response.notification.request.content.userInfo)
         completionHandler(pushNotificationCustomExtras)
+    }
+    
+    func enableDeviceNetworkInfoReporting(_ value: Bool) {
+        CleverTap.sharedInstance()?.enableDeviceNetworkInfoReporting(value)
     }
 }
 

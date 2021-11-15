@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import CoreLocation
 
 public protocol AnalyticsProtocol {
     
@@ -79,12 +80,14 @@ public protocol AnalyticsProtocol {
     
     /**
      Tells the provider that a unique user is logged into the application
-     - Parameter id: local user id on your system
-     - Parameter name: local user name on your system
-     - Parameter email: local user email on your system
-     - Parameter phone: local user phone on your system
+     - Parameters:
+       - id: local user id on your system
+       - name: local user name on your system
+       - email: local user email on your system
+       - phone: local user phone on your system
+       - location: user coordinates (latitude longitude)
      */
-    func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?)
+    func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?)
     
     /**
      Sends event information to all registered providers.
@@ -147,7 +150,7 @@ public protocol AnalyticsProtocol {
 }
 
 extension AnalyticsProtocol {
-    public func updateUserInfo(with id: Any, _ name: String? = nil, _ email: String? = nil, _ phone: String? = nil) { }
+    func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?) { }
     public func register(_ provider: ProviderImage, with settings: [ProviderSettings]) { }
     public func sendEvent(with params: [Param : Any], and items: [Any]?) { }
 }

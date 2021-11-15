@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import CoreLocation
 
 public protocol ProviderProtocol {
     
@@ -23,12 +24,14 @@ public protocol ProviderProtocol {
     
     /**
      Tells the provider that a unique user is logged into the application
-     - Parameter id: local user id on your system
-     - Parameter name: local user name on your system
-     - Parameter email: local user email on your system
-     - Parameter phone: local user phone on your system
+     - Parameters:
+       - id: local user id on your system
+       - name: local user name on your system
+       - email: local user email on your system
+       - phone: local user phone on your system
+       - location: user coordinates (latitude longitude)
      */
-    func updateUserInfo(_ id: Any, _ name: String?, _ email: String?, _ phone: String?)
+    func updateUserInfo(_ id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?)
     
     /**
      Register the device to receive push notifications.
@@ -68,6 +71,13 @@ public protocol ProviderProtocol {
     ///   - response: The user’s response to the notification. This object contains the original notification and the identifier string for the selected action. If the action allowed the user to provide a textual response, this parameter contains a `UNTextInputNotificationResponse` object.
     ///   - completionHandler: The block executed after the user clicks on the notification. The block returns push notification data
     func handleNotification(with response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping ([AnyHashable : Any]?) -> Void)
+    
+    /// Enables the reporting of device network-related information, including IP address.  This reporting is disabled by default.
+    ///
+    /// Use this method to enable device network-related information tracking, including IP address. This reporting is disabled by default.  To re-disable tracking call this method with enabled set to NO.
+    /// - Parameters:
+    ///   - value: Whether device network info reporting should be enabled/disabled.
+    func enableDeviceNetworkInfoReporting(_ value: Bool)
 }
 
 extension ProviderProtocol {
@@ -75,4 +85,5 @@ extension ProviderProtocol {
     func setPushToken(deviceToken: Data) { }
     func setAccountId(_ id: String) { }
     func setAccountToken(_ token: String) { }
+    func enableDeviceNetworkInfoReporting(_ value: Bool) { }
 }

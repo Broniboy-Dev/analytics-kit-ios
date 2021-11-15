@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import CoreLocation
 
 open class AnalyticsKit<Module: AnalyticsModuleProtocol, Event: AnalyticsEventProtocol, Param: AnalyticsParamProtocol> {
     
@@ -42,8 +43,8 @@ extension AnalyticsKit: AnalyticsProtocol {
         }
     }
     
-    public func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?) {
-        providers.forEach { $0.updateUserInfo(id, name, email, phone) }
+    public func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?) {
+        providers.forEach { $0.updateUserInfo(id, name, email, phone, location) }
     }
     
     public func sendEvent(_ event: Event) {
@@ -94,6 +95,8 @@ private extension AnalyticsKit {
                 provider.setAccountId(id)
             case .accountToken(let token):
                 provider.setAccountToken(token)
+            case .networkReporting(let value):
+                provider.enableDeviceNetworkInfoReporting(value)
             }
         }
     }
