@@ -7,25 +7,23 @@
 
 import Foundation
 import CleverTapSDK
+import CoreLocation
+import UserNotifications
 
 class CleverTapProvider: NSObject, ProviderProtocol {
-    
     // MARK: - Properties
     
     private var accountId: String? = nil
     private var accountToken: String? = nil
-    
-    var providerImage: ProviderImage = .cleverTap
-    
+    var type: AnalyticProviderType = .cleverTap
     var pushNotificationCustomExtras: [AnyHashable : Any]?
     
-    // MARK: - Module functions
+    // MARK: - ProviderProtocol
     
     func register() {
         if let accountId = accountId, let accountToken = accountToken {
             CleverTap.setCredentialsWithAccountID(accountId, andToken: accountToken)
         }
-        CleverTap.setDebugLevel(CleverTapLogLevel.debug.rawValue)
         CleverTap.autoIntegrate()
     }
     
@@ -73,7 +71,10 @@ class CleverTapProvider: NSObject, ProviderProtocol {
         CleverTap.sharedInstance()?.recordChargedEvent(withDetails: params, andItems: items)
     }
     
-    func handleNotification(with response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping ([AnyHashable : Any]?) -> Void) {
+    func handleNotification(
+        with response: UNNotificationResponse,
+        _ completionHandler: @escaping ([AnyHashable : Any]?) -> Void
+    ) {
         CleverTap.sharedInstance()?.handleNotification(withData: response.notification.request.content.userInfo)
         completionHandler(pushNotificationCustomExtras)
     }
@@ -86,7 +87,6 @@ class CleverTapProvider: NSObject, ProviderProtocol {
 // MARK: - CleverTapPushNotificationDelegate
 
 extension CleverTapProvider: CleverTapPushNotificationDelegate {
-    
     func pushNotificationTapped(withCustomExtras customExtras: [AnyHashable : Any]!) {
         pushNotificationCustomExtras = customExtras
     }

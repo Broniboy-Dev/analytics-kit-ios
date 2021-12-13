@@ -6,7 +6,6 @@
 //
 
 public protocol AnalyticsModuleProtocol {
-    
     /**
      Provides part of the event name - the screen name (module) in the user interface.
      
@@ -24,5 +23,5 @@ public protocol AnalyticsModuleProtocol {
      
      - Parameter provider: A wrapper over providers that allows you to select one of the predefined objects or add a new one.
      */
-    func name(for provider: ProviderImage) -> String
+    func name(for provider: AnalyticProviderType) -> String
 }
