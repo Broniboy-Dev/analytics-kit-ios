@@ -29,7 +29,7 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     }
     
     func updateUserInfo(
-        _ id: Any,
+        _ id: Any?,
         _ name: String?,
         _ email: String?,
         _ phone: String?,
@@ -73,17 +73,6 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     
     func setFCMTokenCompletion(_ completion: @escaping (String) -> Void) {
         fcmTokenCompletion = completion
-    }
-    
-    func handleNotification(
-        with response: UNNotificationResponse,
-        _ completionHandler: @escaping ([AnyHashable : Any]?) -> Void
-    ) {
-        // TODO: Write implementation
-    }
-    
-    func enableDeviceNetworkInfoReporting(_ value: Bool) {
-        // TODO: Write implementation
     }
     
     func sendEventCrash(with error: Error) {

@@ -28,15 +28,15 @@ class CleverTapProvider: NSObject, ProviderProtocol {
     }
     
     func updateUserInfo(
-        _ id: Any,
+        _ id: Any?,
         _ name: String?,
         _ email: String?,
         _ phone: String?,
         _ location: CLLocationCoordinate2D?
     ) {
         var params: [String : Any] = [:]
-        params["Identity"] = id
-        if let name  = name  { params["Name"]  = name  }
+        if let id = id { params["Identity"] = id}
+        if let name = name { params["Name"]  = name  }
         if let email = email { params["Email"] = email }
         if let phone = phone { params["Phone"] = phone }
         CleverTap.sharedInstance()?.onUserLogin(params)

@@ -28,7 +28,7 @@ class AmplitudeProvider: ProviderProtocol {
     }
     
     func updateUserInfo(
-        _ id: Any,
+        _ id: Any?,
         _ name: String?,
         _ email: String?,
         _ phone: String?,
@@ -41,20 +41,8 @@ class AmplitudeProvider: ProviderProtocol {
         }
     }
     
-    func setPushToken(deviceToken: Data) {
-        
-    }
-    
-    func setAccountId(_ id: String) {
-        
-    }
-    
     func setAccountToken(_ token: String) {
         accountToken = token
-    }
-    
-    func setFCMTokenCompletion(_ completion: @escaping (String) -> Void) {
-        
     }
     
     func sendEvent(_ event: String, with params: [String: Any]) {
@@ -63,10 +51,6 @@ class AmplitudeProvider: ProviderProtocol {
     
     func sendEvent(_ event: String) {
         Amplitude.instance().logEvent(event, withEventProperties: nil)
-    }
-    
-    func sendEvent(with params: [AnyHashable : Any], and items: [Any]) {
-        
     }
     
     func sendTags(_ tags: [String: AnyHashable]) {
@@ -90,25 +74,5 @@ class AmplitudeProvider: ProviderProtocol {
         }
         
         Amplitude.instance().logRevenueV2(revenue)
-    }
-    
-    func handleNotification(with response: UNNotificationResponse, _ completionHandler: @escaping ([AnyHashable : Any]?) -> Void) {
-        
-    }
-    
-    func enableDeviceNetworkInfoReporting(_ value: Bool) {
-        
-    }
-    
-    func sendEventCrash(with error: Error) {
-        
-    }
-    
-    func sendEventCrash(with message: String) {
-        
-    }
-    
-    func getAndSaveToken() {
-        
     }
 }

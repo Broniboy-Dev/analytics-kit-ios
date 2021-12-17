@@ -16,6 +16,11 @@ let package = Package(
     ],
     dependencies: [
         .package(
+            name: "Adjust",
+            url: "https://github.com/adjust/ios_sdk",
+            .branch("master")
+        ),
+        .package(
             name: "Amplitude",
             url: "https://github.com/amplitude/Amplitude-iOS",
             .branch("main")
@@ -36,6 +41,7 @@ let package = Package(
             name: "AnalyticsKit",
             dependencies: [
                 .product(name: "Amplitude", package: "Amplitude"),
+                .product(name: "Adjust", package: "Adjust"),
                 .product(name: "CleverTapSDK", package: "CleverTapSDK"),
                 .product(name: "FirebaseAuth", package: "Firebase"),
                 .product(name: "FirebaseAnalytics", package: "Firebase"),

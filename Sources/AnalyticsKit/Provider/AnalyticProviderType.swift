@@ -6,6 +6,7 @@
 //
 
 public enum AnalyticProviderType {
+    case adjust
     case amplitude
     case cleverTap
     case googleAnalytics
@@ -13,6 +14,8 @@ public enum AnalyticProviderType {
     
     init(_ type: AnalyticProviderType) {
         switch type {
+        case .adjust:
+            self = .adjust
         case .amplitude:
             self = .amplitude
         case .cleverTap:
@@ -26,6 +29,8 @@ public enum AnalyticProviderType {
     
     func getInstance() -> ProviderProtocol {
         switch self {
+        case .adjust:
+            return AdjustProvider()
         case .amplitude:
             return AmplitudeProvider()
         case .cleverTap:

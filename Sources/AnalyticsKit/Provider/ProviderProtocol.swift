@@ -9,6 +9,8 @@ import Foundation
 import UserNotifications
 import CoreLocation
 
+// TODO: come up with a universal or other provider configuration!!!
+
 public protocol ProviderProtocol {
     var type: AnalyticProviderType { get set }
     
@@ -30,7 +32,7 @@ public protocol ProviderProtocol {
        - phone: local user phone on your system
        - location: user coordinates (latitude longitude)
      */
-    func updateUserInfo(_ id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?)
+    func updateUserInfo(_ id: Any?, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?)
     
     /**
      Register the device to receive push notifications.
@@ -48,6 +50,9 @@ public protocol ProviderProtocol {
     /// Configures an account token key for the provider. As a rule, any provider has such information, which can be found in the documentation of a particular provider.
     /// - Parameter token: A character value that will grant authorized access to the account.
     func setAccountToken(_ token: String)
+    
+    // TODO: Write documentation
+    func setEnvironment(_ environment: String)
     
     // TODO: Write documentation
     func setFCMTokenCompletion(_ completion: @escaping (String) -> Void)
@@ -96,6 +101,10 @@ public protocol ProviderProtocol {
     // TODO: Refactoring
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func getAndSaveToken()
+    
+    // TODO: Refactoring
+    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
+    func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?)
 }
 
 extension ProviderProtocol {
@@ -112,7 +121,9 @@ extension ProviderProtocol {
     func setPushToken(deviceToken: Data) { }
     func setAccountId(_ id: String) { }
     func setAccountToken(_ token: String) { }
+    func setEnvironment(_ environment: String) { }
     func setFCMTokenCompletion(_ completion: @escaping (String) -> Void) { }
+    func handleNotification(with response: UNNotificationResponse, _ completionHandler: @escaping ([AnyHashable : Any]?) -> Void) { }
     func enableDeviceNetworkInfoReporting(_ value: Bool) { }
     func sendEventCrash(with error: Error) { }
     func sendEventCrash(with message: String) { }
@@ -120,4 +131,8 @@ extension ProviderProtocol {
     // TODO: Refactoring
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func getAndSaveToken() { }
+    
+    // TODO: Refactoring
+    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
+    func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) { }
 }

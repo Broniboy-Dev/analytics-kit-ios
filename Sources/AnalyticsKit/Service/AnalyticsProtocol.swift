@@ -86,7 +86,7 @@ public protocol AnalyticsProtocol {
        - phone: local user phone on your system
        - location: user coordinates (latitude longitude)
      */
-    func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?)
+    func updateUserInfo(_ id: Any?, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?)
     
     /**
      Sends event information to all registered providers.
@@ -167,10 +167,15 @@ public protocol AnalyticsProtocol {
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     // Do not use in other projects ⚠️
     func getAndSaveToken()
+    
+    // TODO: Refactoring
+    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
+    // Do not use in other projects ⚠️
+    func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?)
 }
 
 extension AnalyticsProtocol {
-    public func updateUserInfo(with id: Any, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?) { }
+    public func updateUserInfo(_ id: Any?, _ name: String?, _ email: String?, _ phone: String?, _ location: CLLocationCoordinate2D?) { }
     public func register(_ provider: AnalyticProviderType, with settings: [ProviderSettings]) { }
     public func sendEvent(with params: [Param : Any], and items: [Any]?) { }
     public func sendTags(_ tags: [String: AnyHashable]) { }
@@ -182,4 +187,9 @@ extension AnalyticsProtocol {
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     // Do not use in other projects ⚠️
     public func getAndSaveToken() { }
+    
+    // TODO: Refactoring
+    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
+    // Do not use in other projects ⚠️
+    public func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) { }
 }

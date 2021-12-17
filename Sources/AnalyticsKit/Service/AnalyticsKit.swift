@@ -45,7 +45,7 @@ extension AnalyticsKit: AnalyticsProtocol {
     }
     
     public func updateUserInfo(
-        with id: Any,
+        _ id: Any?,
         _ name: String?,
         _ email: String?,
         _ phone: String?,
@@ -131,6 +131,14 @@ extension AnalyticsKit: AnalyticsProtocol {
             provider.getAndSaveToken()
         }
     }
+    
+    // TODO: Refactoring
+    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
+    public func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) {
+        providers.forEach { provider in
+            provider.sendEventOrderCreated(event, revenue: revenue, transactionId: transactionId)
+        }
+    }
 }
 
 // MARK: - Module functions
@@ -148,6 +156,8 @@ private extension AnalyticsKit {
                 provider.setAccountId(id)
             case .accountToken(let token):
                 provider.setAccountToken(token)
+            case .environment(let environment):
+                provider.setEnvironment(environment)
             case .networkReporting(let value):
                 provider.enableDeviceNetworkInfoReporting(value)
             case .fcmTokenCompletion(_, let completion):
