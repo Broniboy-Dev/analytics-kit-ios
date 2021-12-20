@@ -91,8 +91,8 @@ public protocol ProviderProtocol {
     ///
     /// Use this method to enable device network-related information tracking, including IP address. This reporting is disabled by default.  To re-disable tracking call this method with enabled set to NO.
     /// - Parameters:
-    ///   - value: Whether device network info reporting should be enabled/disabled.
-    func enableDeviceNetworkInfoReporting(_ value: Bool)
+    ///   - permission: Whether device network info reporting should be enabled/disabled.
+    func enableDeviceNetworkInfoReporting(_ permission: Bool)
     
     func sendEventCrash(with error: Error)
     
@@ -124,7 +124,7 @@ extension ProviderProtocol {
     func setEnvironment(_ environment: String) { }
     func setFCMTokenCompletion(_ completion: @escaping (String) -> Void) { }
     func handleNotification(with response: UNNotificationResponse, _ completionHandler: @escaping ([AnyHashable : Any]?) -> Void) { }
-    func enableDeviceNetworkInfoReporting(_ value: Bool) { }
+    func enableDeviceNetworkInfoReporting(_ permission: Bool) { }
     func sendEventCrash(with error: Error) { }
     func sendEventCrash(with message: String) { }
     

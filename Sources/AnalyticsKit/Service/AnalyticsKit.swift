@@ -152,14 +152,19 @@ private extension AnalyticsKit {
             switch configuration {
             case .pushToken(let token):
                 provider.setPushToken(deviceToken: token)
+                
             case .accountId(let id):
                 provider.setAccountId(id)
+                
             case .accountToken(let token):
                 provider.setAccountToken(token)
+                
             case .environment(let environment):
                 provider.setEnvironment(environment)
-            case .networkReporting(let value):
-                provider.enableDeviceNetworkInfoReporting(value)
+                
+            case .networkReporting(let parmission):
+                provider.enableDeviceNetworkInfoReporting(parmission)
+                
             case .fcmTokenCompletion(_, let completion):
                 provider.setFCMTokenCompletion(completion)
             }

@@ -15,6 +15,7 @@ class CleverTapProvider: NSObject, ProviderProtocol {
     
     private var accountId: String? = nil
     private var accountToken: String? = nil
+    private var isDeviceNetworkInfoReportingEnable: Bool = false
     var type: AnalyticProviderType = .cleverTap
     var pushNotificationCustomExtras: [AnyHashable : Any]?
     
@@ -25,6 +26,7 @@ class CleverTapProvider: NSObject, ProviderProtocol {
             CleverTap.setCredentialsWithAccountID(accountId, andToken: accountToken)
         }
         CleverTap.autoIntegrate()
+        CleverTap.sharedInstance()?.enableDeviceNetworkInfoReporting(isDeviceNetworkInfoReportingEnable)
     }
     
     func updateUserInfo(
@@ -79,8 +81,8 @@ class CleverTapProvider: NSObject, ProviderProtocol {
         completionHandler(pushNotificationCustomExtras)
     }
     
-    func enableDeviceNetworkInfoReporting(_ value: Bool) {
-        CleverTap.sharedInstance()?.enableDeviceNetworkInfoReporting(value)
+    func enableDeviceNetworkInfoReporting(_ permission: Bool) {
+        isDeviceNetworkInfoReportingEnable = permission
     }
 }
 
