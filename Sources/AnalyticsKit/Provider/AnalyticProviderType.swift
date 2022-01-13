@@ -43,10 +43,13 @@ public enum AnalyticProviderType {
     }
     
     static func getType(from instance: ProviderProtocol) -> AnalyticProviderType {
-        if instance is CleverTapProvider {
+        if instance is AdjustProvider {
+            return .adjust
+        } else if instance is AmplitudeProvider {
+            return .amplitude
+        } else if instance is CleverTapProvider {
             return .cleverTap
-        }
-        else if instance is GoogleAnalyticsProvider {
+        } else if instance is GoogleAnalyticsProvider {
             return .googleAnalytics
         } else {
             return .other(instance)

@@ -94,8 +94,12 @@ public protocol ProviderProtocol {
     ///   - permission: Whether device network info reporting should be enabled/disabled.
     func enableDeviceNetworkInfoReporting(_ permission: Bool)
     
+    // TODO: Rename
+    // Here a name like "error message" is more appropriate
     func sendEventCrash(with error: Error)
     
+    // TODO: Rename
+    // Here a name like "error message" is more appropriate
     func sendEventCrash(with message: String)
     
     // TODO: Refactoring
@@ -109,15 +113,8 @@ public protocol ProviderProtocol {
 
 extension ProviderProtocol {
     func sendEvent(with params: [AnyHashable : Any], and items: [Any]) { }
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func sendTags(_ tags: [String: AnyHashable]) { }
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func sendEventRevenue(with params: [String: Any]) { }
-    
     func setPushToken(deviceToken: Data) { }
     func setAccountId(_ id: String) { }
     func setAccountToken(_ token: String) { }
@@ -127,12 +124,6 @@ extension ProviderProtocol {
     func enableDeviceNetworkInfoReporting(_ permission: Bool) { }
     func sendEventCrash(with error: Error) { }
     func sendEventCrash(with message: String) { }
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func getAndSaveToken() { }
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) { }
 }

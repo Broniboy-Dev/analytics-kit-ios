@@ -13,6 +13,7 @@ open class AnalyticsKit<Module: AnalyticsModuleProtocol, Event: AnalyticsEventPr
     // MARK: - Properties
     
     private var providers: [ProviderProtocol] = []
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
     
     // MARK: - Initialization
     
@@ -51,7 +52,9 @@ extension AnalyticsKit: AnalyticsProtocol {
         _ phone: String?,
         _ location: CLLocationCoordinate2D?
     ) {
-        providers.forEach { $0.updateUserInfo(id, name, email, phone, location) }
+        utilityQueue.sync {
+            providers.forEach { $0.updateUserInfo(id, name, email, phone, location) }
+        }
     }
     
     public func sendEvent(_ event: Event) {
@@ -77,22 +80,24 @@ extension AnalyticsKit: AnalyticsProtocol {
         with params: [Param : Any],
         and items: [Any]?
     ) {
-        providers.forEach { provider in
-            var hashableParams: [AnyHashable : Any] = [:]
-            params.forEach { hashableParams[$0.name(for: provider.type)] = $1 }
-            provider.sendEvent(with: hashableParams, and: items ?? [])
+        utilityQueue.sync {
+            providers.forEach { provider in
+                var hashableParams: [AnyHashable : Any] = [:]
+                params.forEach { hashableParams[$0.name(for: provider.type)] = $1 }
+                provider.sendEvent(with: hashableParams, and: items ?? [])
+            }
         }
     }
     
     public func sendTags(_ tags: [String: AnyHashable]) {
-        providers.forEach { provider in
-            provider.sendTags(tags)
+        utilityQueue.sync {
+            providers.forEach { $0.sendTags(tags) }
         }
     }
     
     public func sendEventRevenue(with params: [String: Any]) {
-        providers.forEach { provider in
-            provider.sendEventRevenue(with: params)
+        utilityQueue.sync {
+            providers.forEach { $0.sendEventRevenue(with: params) }
         }
     }
     
@@ -113,31 +118,19 @@ extension AnalyticsKit: AnalyticsProtocol {
     }
     
     public func sendEventCrash(with error: Error) {
-        providers.forEach { provider in
-            provider.sendEventCrash(with: error)
-        }
+        providers.forEach { $0.sendEventCrash(with: error) }
     }
     
     public func sendEventCrash(with message: String) {
-        providers.forEach { provider in
-            provider.sendEventCrash(with: message)
-        }
+        providers.forEach { $0.sendEventCrash(with: message) }
     }
     
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     public func getAndSaveToken() {
-        providers.forEach { provider in
-            provider.getAndSaveToken()
-        }
+        providers.forEach { $0.getAndSaveToken() }
     }
     
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     public func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) {
-        providers.forEach { provider in
-            provider.sendEventOrderCreated(event, revenue: revenue, transactionId: transactionId)
-        }
+        providers.forEach { $0.sendEventOrderCreated(event, revenue: revenue, transactionId: transactionId) }
     }
 }
 
@@ -173,43 +166,30 @@ private extension AnalyticsKit {
     
     func sendEvent(
         _ event: Event,
-        from module: Module?,
+        with params: [Param: Any]? = nil,
+        from module: Module? = nil,
         by provider: ProviderProtocol
     ) {
         let providerType = AnalyticProviderType.getType(from: provider)
-        guard event.getPermissionToSentEvent(event, from: module, for: providerType) else { return }
-        let eventName = getEventName(event, from: module, by: providerType)
-        provider.sendEvent(eventName)
-    }
-    
-    func sendEvent(
-        _ event: Event,
-        with params: [Param: Any]?,
-        from module: Module?,
-        by provider: ProviderProtocol
-    ) {
-        let providerType = AnalyticProviderType.getType(from: provider)
-        let eventName = getEventName(event, from: module, by: providerType)
+        
+        var eventName: String {
+            if let module = module {
+                return module.name(for: providerType) + event.name(for: providerType)
+            } else {
+                return event.name(for: providerType)
+            }
+        }
+        
         guard event.getPermissionToSentEvent(event, from: module, for: providerType) else { return }
         
-        if let params = params {
-            var eventParams: [String: Any] = [:]
-            params.forEach { eventParams[$0.name(for: providerType)] = $1 }
-            provider.sendEvent(eventName, with: eventParams)
-        } else {
-            provider.sendEvent(eventName)
-        }
-    }
-    
-    func getEventName(
-        _ event: Event,
-        from module: Module?,
-        by provider: AnalyticProviderType
-    ) -> String {
-        if let module = module {
-            return module.name(for: provider) + event.name(for: provider)
-        } else {
-            return event.name(for: provider)
+        utilityQueue.sync {
+            if let params = params {
+                var eventParams: [String: Any] = [:]
+                params.forEach { eventParams[$0.name(for: providerType)] = $1 }
+                provider.sendEvent(eventName, with: eventParams)
+            } else {
+                provider.sendEvent(eventName)
+            }
         }
     }
 }
