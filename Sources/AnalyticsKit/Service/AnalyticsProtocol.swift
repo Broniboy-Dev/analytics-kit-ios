@@ -24,17 +24,7 @@ public protocol AnalyticsProtocol {
      
      ### Example
      ```
-     struct AnalyticsService<T: AnalyticsProtocol> {
-         let service: T
-     }
-     
-     class AnalyticsService {
-     
-        func activateAnalytics() {
-            let analytics = DI.container.resolve(AnalyticsService<ClientAnalytics>.self)!
-            analytics.service.register(.cleverTap)
-        }
-     }
+     // TODO: Rewrite the example
      ```
      
      - Parameter provider: A wrapper over providers that allows you to select one of the predefined objects or add a new one.
@@ -51,31 +41,22 @@ public protocol AnalyticsProtocol {
      
      ### Example
      ```
-     struct AnalyticsService<T: AnalyticsProtocol> {
-         let service: T
-     }
-     
-     class AnalyticsService {
-     
-        func activateAnalytics() {
-            let analytics = DI.container.resolve(AnalyticsService<ClientAnalytics>.self)!
-            analytics.service.register(.cleverTap, with [.accountId("XXX-YYY-ZZZ")])
-        }
-     }
+     // TODO: Rewrite the example
      ```
-     
-     - Parameter provider: A wrapper over providers that allows you to select one of the predefined objects or add a new one.
-     - Parameter settings: Settings applied to the provider.
+     - Parameters:
+       - provider: A wrapper over providers that allows you to select one of the predefined objects or add a new one.
+       - settings: Settings applied to the provider.
      */
-    func register(_ provider: AnalyticProviderType, with settings: [ProviderSettings])
+    func register(_ provider: AnalyticProviderType, with settings: ProviderSettings)
     
     // TODO: ⚠️ Add method to configure only one provider
     
     /**
      - Parameters:
-        - settings: Settings applied to the provider.
+       - provider: A wrapper over providers that allows you to select one of the predefined objects or add a new one.
+       - settings: Settings applied to the provider.
      */
-    func applyProvidersSettings(_ settings: [ProviderSettings])
+    func updateSettings(of provider: AnalyticProviderType, by settings: ProviderSettings)
     
     /**
      Tells the provider that a unique user is logged into the application

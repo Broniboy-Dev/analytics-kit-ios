@@ -15,6 +15,7 @@ class AmplitudeProvider: ProviderProtocol {
     // MARK: - Properties
     
     private var accountToken: String? = nil
+    private var trackingSessionEventsPermission: Bool?
     var type: AnalyticProviderType = .amplitude
     var pushNotificationCustomExtras: [AnyHashable : Any]?
     
@@ -24,6 +25,8 @@ class AmplitudeProvider: ProviderProtocol {
             Amplitude.instance().adSupportBlock = {
                 ASIdentifierManager.shared().advertisingIdentifier.uuidString
             }
+            
+            Amplitude.instance().trackingSessionEvents = trackingSessionEventsPermission ?? false
         }
     }
     
@@ -74,5 +77,9 @@ class AmplitudeProvider: ProviderProtocol {
         }
         
         Amplitude.instance().logRevenueV2(revenue)
+    }
+    
+    func setTrackingSessionEventsPermission(_ permission: Bool?) {
+        self.trackingSessionEventsPermission = permission
     }
 }

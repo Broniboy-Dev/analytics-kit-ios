@@ -11,7 +11,7 @@ import CoreLocation
 
 // TODO: come up with a universal or other provider configuration!!!
 
-public protocol ProviderProtocol {
+public protocol ProviderProtocol: AnyObject {
     var type: AnalyticProviderType { get set }
     
     var pushNotificationCustomExtras: [AnyHashable : Any]? { get set }
@@ -39,9 +39,9 @@ public protocol ProviderProtocol {
      
      This will associate the device token with the current user to allow push notifications to the user.
      
-     - Parameter deviceToken: device token as returned from application:didRegisterForRemoteNotificationsWithDeviceToken:
+     - Parameter deviceToken: token as returned from application:didRegisterForRemoteNotificationsWithDeviceToken:
      */
-    func setPushToken(deviceToken: Data)
+    func setDeviceToken(_ deviceToken: Data)
     
     /// Configures an account identifier for the provider. As a rule, any provider has such information, which can be found in the documentation of a particular provider.
     /// - Parameter id: An identifier that allows you to associate your analytics provider account with the application.
@@ -55,7 +55,12 @@ public protocol ProviderProtocol {
     func setEnvironment(_ environment: String)
     
     // TODO: Write documentation
-    func setFCMTokenCompletion(_ completion: @escaping (String) -> Void)
+    func setPushTokenCompletion(_ completion: @escaping (String) -> Void)
+    
+    // TODO: Refactoring
+    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
+    // Only Amplitude method
+    func setTrackingSessionEventsPermission(_ permission: Bool?)
     
     /// Calls the provider's own SDK method to send data.
     /// - Parameters:
@@ -92,7 +97,7 @@ public protocol ProviderProtocol {
     /// Use this method to enable device network-related information tracking, including IP address. This reporting is disabled by default.  To re-disable tracking call this method with enabled set to NO.
     /// - Parameters:
     ///   - permission: Whether device network info reporting should be enabled/disabled.
-    func enableDeviceNetworkInfoReporting(_ permission: Bool)
+    func enableDeviceNetworkInfoReporting(_ permission: Bool?)
     
     // TODO: Rename
     // Here a name like "error message" is more appropriate
@@ -115,13 +120,14 @@ extension ProviderProtocol {
     func sendEvent(with params: [AnyHashable : Any], and items: [Any]) { }
     func sendTags(_ tags: [String: AnyHashable]) { }
     func sendEventRevenue(with params: [String: Any]) { }
-    func setPushToken(deviceToken: Data) { }
+    func setDeviceToken(_ deviceToken: Data) { }
     func setAccountId(_ id: String) { }
     func setAccountToken(_ token: String) { }
     func setEnvironment(_ environment: String) { }
-    func setFCMTokenCompletion(_ completion: @escaping (String) -> Void) { }
+    func setPushTokenCompletion(_ completion: @escaping (String) -> Void) { }
+    func setTrackingSessionEventsPermission(_ permission: Bool?) { }
     func handleNotification(with response: UNNotificationResponse, _ completionHandler: @escaping ([AnyHashable : Any]?) -> Void) { }
-    func enableDeviceNetworkInfoReporting(_ permission: Bool) { }
+    func enableDeviceNetworkInfoReporting(_ permission: Bool?) { }
     func sendEventCrash(with error: Error) { }
     func sendEventCrash(with message: String) { }
     func getAndSaveToken() { }

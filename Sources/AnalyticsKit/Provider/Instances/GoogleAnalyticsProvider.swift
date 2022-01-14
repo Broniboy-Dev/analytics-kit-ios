@@ -18,7 +18,7 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     
     var type: AnalyticProviderType = .googleAnalytics
     var pushNotificationCustomExtras: [AnyHashable : Any]?
-    var fcmTokenCompletion: ((String) -> Void)?
+    private var pushTokenCompletion: ((String) -> Void)?
     
     // MARK: - Module functions
     
@@ -46,7 +46,7 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
         }
     }
 
-    func setPushToken(deviceToken: Data) {
+    func setDeviceToken(_ deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
     }
     
@@ -71,8 +71,8 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
         print("Google Analytics has no analogue of this function")
     }
     
-    func setFCMTokenCompletion(_ completion: @escaping (String) -> Void) {
-        fcmTokenCompletion = completion
+    func setPushTokenCompletion(_ completion: @escaping (String) -> Void) {
+        pushTokenCompletion = completion
     }
     
     func sendEventCrash(with error: Error) {
@@ -88,11 +88,11 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     func getAndSaveToken() {
         Messaging.messaging().token { token, error in
             if let error = error {
-                print("FIRMessaging. Error fetching remote instange ID: \(error)")
+                NSLog("[AnalyticsKit/Firebase]. Error fetching remote instange ID: \(error)")
             } else if let token = token {
-                print("FIRMessaging. Remote instance ID token: \(token)")
-                guard let fcmTokenCompletion = self.fcmTokenCompletion else { return }
-                fcmTokenCompletion(token)
+                NSLog("[AnalyticsKit/Firebase]. Remote instance ID token: \(token)")
+                guard let pushTokenCompletion = self.pushTokenCompletion else { return }
+                pushTokenCompletion(token)
             }
         }
     }
@@ -104,7 +104,7 @@ extension GoogleAnalyticsProvider: MessagingDelegate {
         didReceiveRegistrationToken fcmToken: String?
     ) {
         if let fcmToken = fcmToken {
-            guard let fcmTokenCompletion = self.fcmTokenCompletion else { return }
+            guard let fcmTokenCompletion = self.pushTokenCompletion else { return }
             fcmTokenCompletion(fcmToken)
         }
     }

@@ -56,3 +56,23 @@ public enum AnalyticProviderType {
         }
     }
 }
+
+// MARK: - Equatable
+
+extension AnalyticProviderType: Equatable {
+    public static func == (lhs: AnalyticProviderType, rhs: AnalyticProviderType) -> Bool {
+        switch (lhs, rhs) {
+        case (.adjust, .adjust),
+             (.amplitude, .amplitude),
+             (.cleverTap, .cleverTap),
+             (.googleAnalytics, .googleAnalytics):
+            return true
+
+        case let (.other(left), .other(right)):
+            return left === right
+
+        default:
+            return false
+        }
+    }
+}
