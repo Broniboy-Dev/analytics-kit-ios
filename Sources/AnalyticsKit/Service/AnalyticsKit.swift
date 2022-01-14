@@ -9,7 +9,7 @@ import Foundation
 import UserNotifications
 import CoreLocation
 
-open class AnalyticsKit<Module: AnalyticsModuleProtocol, Event: AnalyticsEventProtocol, Param: AnalyticsParamProtocol> {
+open class AnalyticsKit<Module: AnalyticsModuleProtocol, Param: AnalyticsParamProtocol> {
     // MARK: - Properties
     
     private var providers: [ProviderProtocol] = []
@@ -57,18 +57,18 @@ extension AnalyticsKit: AnalyticsProtocol {
         }
     }
     
-    public func sendEvent(_ event: Event) {
+    public func sendEvent<Event: AnalyticsEventProtocol>(_ event: Event) {
         providers.forEach { sendEvent(event, from: nil, by: $0) }
     }
     
-    public func sendEvent(
+    public func sendEvent<Event: AnalyticsEventProtocol>(
         _ event: Event,
         from module: Module?
     ) {
         providers.forEach { sendEvent(event, from: module, by: $0) }
     }
     
-    public func sendEvent(
+    public func sendEvent<Event: AnalyticsEventProtocol>(
         _ event: Event,
         with params: [Param : Any]?,
         from module: Module?
@@ -164,7 +164,7 @@ private extension AnalyticsKit {
         }
     }
     
-    func sendEvent(
+    func sendEvent<Event: AnalyticsEventProtocol>(
         _ event: Event,
         with params: [Param: Any]? = nil,
         from module: Module? = nil,

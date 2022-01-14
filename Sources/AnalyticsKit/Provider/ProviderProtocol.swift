@@ -11,7 +11,7 @@ import CoreLocation
 
 // TODO: come up with a universal or other provider configuration!!!
 
-public protocol ProviderProtocol {
+public protocol ProviderProtocol: AnyObject {
     var type: AnalyticProviderType { get set }
     
     var pushNotificationCustomExtras: [AnyHashable : Any]? { get set }
