@@ -18,7 +18,9 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     
     var type: AnalyticProviderType = .googleAnalytics
     var pushNotificationCustomExtras: [AnyHashable : Any]?
-    var fcmTokenCompletion: ((String) -> Void)?
+    var logLevel: AnalyticsLogLevel?
+    
+    private var fcmTokenCompletion: ((String) -> Void)?
     
     // MARK: - Module functions
     
@@ -26,6 +28,15 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
         // TODO: Not sure if Messaging delegate assignment is always required
         Messaging.messaging().delegate = self
         FirebaseApp.configure()
+        
+        switch logLevel {
+        case .max:
+            FirebaseConfiguration.shared.setLoggerLevel(.max)
+        case .min:
+            FirebaseConfiguration.shared.setLoggerLevel(.min)
+        case .none:
+            break
+        }
     }
     
     func updateUserInfo(
@@ -95,6 +106,10 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
                 fcmTokenCompletion(token)
             }
         }
+    }
+    
+    func setLogLevel(_ logLevel: AnalyticsLogLevel) {
+        self.logLevel = logLevel
     }
 }
 

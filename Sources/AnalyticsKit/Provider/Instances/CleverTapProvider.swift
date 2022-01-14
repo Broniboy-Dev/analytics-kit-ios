@@ -13,11 +13,13 @@ import UserNotifications
 class CleverTapProvider: NSObject, ProviderProtocol {
     // MARK: - Properties
     
+    var type: AnalyticProviderType = .cleverTap
+    var pushNotificationCustomExtras: [AnyHashable : Any]?
+    var logLevel: AnalyticsLogLevel?
+    
     private var accountId: String? = nil
     private var accountToken: String? = nil
     private var isDeviceNetworkInfoReportingEnable: Bool = false
-    var type: AnalyticProviderType = .cleverTap
-    var pushNotificationCustomExtras: [AnyHashable : Any]?
     
     // MARK: - ProviderProtocol
     
@@ -27,6 +29,15 @@ class CleverTapProvider: NSObject, ProviderProtocol {
         }
         CleverTap.autoIntegrate()
         CleverTap.sharedInstance()?.enableDeviceNetworkInfoReporting(isDeviceNetworkInfoReportingEnable)
+        
+        switch logLevel {
+        case .max:
+            CleverTap.setDebugLevel(CleverTapLogLevel.debug.rawValue)
+        case .min:
+            CleverTap.setDebugLevel(CleverTapLogLevel.off.rawValue)
+        case .none:
+            break
+        }
     }
     
     func updateUserInfo(
@@ -83,6 +94,10 @@ class CleverTapProvider: NSObject, ProviderProtocol {
     
     func enableDeviceNetworkInfoReporting(_ permission: Bool) {
         isDeviceNetworkInfoReportingEnable = permission
+    }
+    
+    func setLogLevel(_ logLevel: AnalyticsLogLevel) {
+        self.logLevel = logLevel
     }
 }
 

@@ -14,4 +14,5 @@ public enum ProviderSettings {
     case environment(_ environment: String)
     case networkReporting(_ isEnable: Bool)
     case fcmTokenCompletion(_ provider: AnalyticProviderType, _ completion: (String) -> Void)
+    case logLevel(_ logLevel: AnalyticsLogLevel)
 }

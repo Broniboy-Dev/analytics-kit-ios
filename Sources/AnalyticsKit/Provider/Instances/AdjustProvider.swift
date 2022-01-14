@@ -12,9 +12,11 @@ import CoreLocation
 class AdjustProvider: NSObject, ProviderProtocol {
     // MARK: - Properties
     
+    var type: AnalyticProviderType = .adjust
+    var logLevel: AnalyticsLogLevel?
+    
     private var accountToken: String? = nil
     private var environment: String? = nil
-    var type: AnalyticProviderType = .adjust
     
     var pushNotificationCustomExtras: [AnyHashable : Any]?
     
@@ -22,9 +24,16 @@ class AdjustProvider: NSObject, ProviderProtocol {
         var adjustConfig: ADJConfig? = nil
         if let accountToken = accountToken, let environment = environment {
             adjustConfig = ADJConfig(appToken: accountToken, environment: environment)
+            switch logLevel {
+            case .max:
+                adjustConfig?.logLevel = ADJLogLevelVerbose
+            case .min:
+                adjustConfig?.logLevel = ADJLogLevelSuppress
+            case .none:
+                break
+            }
         }
         adjustConfig?.delegate = self
-        Adjust.appDidLaunch(adjustConfig)
     }
     
     func updateUserInfo(
@@ -93,6 +102,10 @@ class AdjustProvider: NSObject, ProviderProtocol {
         }
 
         Adjust.trackEvent(adjustEvent)
+    }
+    
+    func setLogLevel(_ logLevel: AnalyticsLogLevel) {
+        self.logLevel = logLevel
     }
 }
 

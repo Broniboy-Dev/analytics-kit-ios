@@ -160,6 +160,9 @@ private extension AnalyticsKit {
                 
             case .fcmTokenCompletion(_, let completion):
                 provider.setFCMTokenCompletion(completion)
+                
+            case .logLevel(let logLevel):
+                provider.setLogLevel(logLevel)
             }
         }
     }

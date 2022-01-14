@@ -14,15 +14,25 @@ import UserNotifications
 class AmplitudeProvider: ProviderProtocol {
     // MARK: - Properties
     
-    private var accountToken: String? = nil
     var type: AnalyticProviderType = .amplitude
     var pushNotificationCustomExtras: [AnyHashable : Any]?
+    var logLevel: AnalyticsLogLevel?
+    
+    private var accountToken: String? = nil
     
     func register() {
         if let token = accountToken {
             Amplitude.instance().initializeApiKey(token)
             Amplitude.instance().adSupportBlock = {
                 ASIdentifierManager.shared().advertisingIdentifier.uuidString
+            }
+            
+            switch logLevel {
+            case .min, .max:
+                // TODO: Write a nominal logger layer
+                NSLog("[AnalyticsKit/Amplitude]: Does not support changing the logging level. By default, only critical errors are logged to console.")
+            case .none:
+                break
             }
         }
     }
@@ -74,5 +84,9 @@ class AmplitudeProvider: ProviderProtocol {
         }
         
         Amplitude.instance().logRevenueV2(revenue)
+    }
+    
+    func setLogLevel(_ logLevel: AnalyticsLogLevel) {
+        self.logLevel = logLevel
     }
 }

@@ -16,6 +16,8 @@ public protocol ProviderProtocol {
     
     var pushNotificationCustomExtras: [AnyHashable : Any]? { get set }
     
+    var logLevel: AnalyticsLogLevel? { get set }
+    
     /**
      The method calls the analytics provider's own SDK initializer.
      
@@ -109,6 +111,9 @@ public protocol ProviderProtocol {
     // TODO: Refactoring
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?)
+    
+    /// The log levels used by internal logging
+    func setLogLevel(_ logLevel: AnalyticsLogLevel)
 }
 
 extension ProviderProtocol {
