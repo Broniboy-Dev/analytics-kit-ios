@@ -1,5 +1,5 @@
 //
-//  ProviderConfigurationProtocol.swift
+//  ProviderSettings.swift
 //  
 //
 //  Created by Johnnie Walker on 31.08.2021.
