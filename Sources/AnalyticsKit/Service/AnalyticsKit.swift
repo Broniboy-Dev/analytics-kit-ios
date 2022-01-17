@@ -31,7 +31,7 @@ extension AnalyticsKit: AnalyticsProtocol {
     
     public func register(
         _ provider: AnalyticProviderType,
-        with settings: [ProviderSettings]
+        with settings: ProviderSettings
     ) {
         let instance = provider.getInstance()
         applySettings(settings, to: instance)
@@ -39,10 +39,17 @@ extension AnalyticsKit: AnalyticsProtocol {
         providers.append(instance)
     }
     
-    public func applyProvidersSettings(_ settings: [ProviderSettings]) {
-        providers.forEach { provider in
+    public func updateSettings(
+        of provider: AnalyticProviderType,
+        by settings: ProviderSettings
+    ) {
+        if let provider = providers.first(where: { $0.type == provider }) {
             applySettings(settings, to: provider)
         }
+    }
+    
+    public func applyProvidersSettings(_ settings: ProviderSettings) {
+        providers.forEach { applySettings(settings, to: $0) }
     }
     
     public func updateUserInfo(
@@ -138,28 +145,39 @@ extension AnalyticsKit: AnalyticsProtocol {
 
 private extension AnalyticsKit {
     func applySettings(
-        _ settings: [ProviderSettings],
+        _ settings: ProviderSettings,
         to provider: ProviderProtocol
     ) {
-        settings.forEach { configuration in
-            switch configuration {
-            case .pushToken(let token):
-                provider.setPushToken(deviceToken: token)
-                
-            case .accountId(let id):
-                provider.setAccountId(id)
-                
-            case .accountToken(let token):
-                provider.setAccountToken(token)
-                
-            case .environment(let environment):
-                provider.setEnvironment(environment)
-                
-            case .networkReporting(let parmission):
-                provider.enableDeviceNetworkInfoReporting(parmission)
-                
-            case .fcmTokenCompletion(_, let completion):
-                provider.setFCMTokenCompletion(completion)
+        switch settings {
+        case .adjustSettings(let accountToken, let environment):
+            if provider is AdjustProvider {
+                if let accountToken = accountToken { provider.setAccountToken(accountToken) }
+                if let environment = environment { provider.setEnvironment(environment) }
+            } else {
+                showInConcoleWrongProviderImplementation()
+            }
+        case .amplitudeSettings(let accountToken, let trackingPermission):
+            if provider is AmplitudeProvider {
+                if let accountToken = accountToken { provider.setAccountToken(accountToken) }
+                if let trackingPermission = trackingPermission { provider.setTrackingSessionEventsPermission(trackingPermission) }
+            } else {
+                showInConcoleWrongProviderImplementation()
+            }
+        case .cleverTapSettings(let accountId, let accountToken, let networkInfoPermission, let deviceToken):
+            if provider is CleverTapProvider {
+                if let accountId = accountId { provider.setAccountId(accountId) }
+                if let accountToken = accountToken { provider.setAccountToken(accountToken) }
+                if let permission = networkInfoPermission { provider.enableDeviceNetworkInfoReporting(permission) }
+                if let deviceToken = deviceToken { provider.setDeviceToken(deviceToken) }
+            } else {
+                showInConcoleWrongProviderImplementation()
+            }
+        case .googleAnalyticsSettings(let completion, let deviceToken):
+            if provider is GoogleAnalyticsProvider {
+                if let completion = completion { provider.setPushTokenCompletion(completion) }
+                if let deviceToken = deviceToken { provider.setDeviceToken(deviceToken) }
+            } else {
+                showInConcoleWrongProviderImplementation()
             }
         }
     }
@@ -191,5 +209,9 @@ private extension AnalyticsKit {
                 provider.sendEvent(eventName)
             }
         }
+    }
+    
+    func showInConcoleWrongProviderImplementation() {
+        NSLog("[AnalyticsKit] The provider does not support the selected settings configuration")
     }
 }
