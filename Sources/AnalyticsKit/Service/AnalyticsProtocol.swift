@@ -11,7 +11,6 @@ import CoreLocation
 
 public protocol AnalyticsProtocol {
     associatedtype Module: AnalyticsModuleProtocol
-    associatedtype Event: AnalyticsEventProtocol
     associatedtype Param: AnalyticsParamProtocol
     
     /**
@@ -80,7 +79,7 @@ public protocol AnalyticsProtocol {
      - Parameters:
         - event: based on `AnalyticsEventProtocol` protocol. Implemented in the project.
      */
-    func sendEvent(_ event: Event)
+    func sendEvent<Event: AnalyticsEventProtocol>(_ event: Event)
     
     /**
      Sends event information to all registered providers.
@@ -96,7 +95,7 @@ public protocol AnalyticsProtocol {
         - event: based on `AnalyticsEventProtocol` protocol. Implemented in the project.
         - module: based on `AnalyticsModuleProtocol` protocol. Implemented in the project.
      */
-    func sendEvent(_ event: Event, from module: Module?)
+    func sendEvent<Event: AnalyticsEventProtocol>(_ event: Event, from module: Module?)
     
     /**
      Sends event information to all registered providers.
@@ -113,7 +112,7 @@ public protocol AnalyticsProtocol {
         - params: based on `AnalyticsParamProtocol` protocol. Implemented in the project.
         - module: based on `AnalyticsModuleProtocol` protocol. Implemented in the project.
      */
-    func sendEvent(_ event: Event, with params: [Param: Any]?, from module: Module?)
+    func sendEvent<Event: AnalyticsEventProtocol>(_ event: Event, with params: [Param: Any]?, from module: Module?)
     
     // TODO: It seems that the method sendEvent(with params, and items) should be organized in some other way. At the moment, it is present unchanged in ProviderProtocol
     
