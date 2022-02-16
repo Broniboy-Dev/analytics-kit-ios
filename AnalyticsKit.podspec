@@ -19,6 +19,7 @@ Pod::Spec.new do |spec|
   spec.dependency 'Amplitude'
   spec.dependency 'Adjust'
   spec.dependency 'CleverTap-iOS-SDK'
+  spec.dependency 'FirebaseCore'
   spec.dependency 'FirebaseAnalytics'
   spec.dependency 'FirebaseCrashlytics'
   spec.dependency 'FirebaseMessaging'
