@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseCore
 import FirebaseAnalytics
 import FirebaseCrashlytics
 import FirebaseMessaging
