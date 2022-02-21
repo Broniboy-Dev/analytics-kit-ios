@@ -151,7 +151,7 @@ public protocol AnalyticsProtocol {
     // TODO: Refactoring
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     // Do not use in other projects ⚠️
-    func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?)
+    func sendEventOrderCreated<Event: AnalyticsEventProtocol>(_ event: Event, revenue: Double?, currencyCode: String?, transactionId: String?)
 }
 
 extension AnalyticsProtocol {
@@ -167,9 +167,4 @@ extension AnalyticsProtocol {
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     // Do not use in other projects ⚠️
     public func getAndSaveToken() { }
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
-    // Do not use in other projects ⚠️
-    public func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) { }
 }
