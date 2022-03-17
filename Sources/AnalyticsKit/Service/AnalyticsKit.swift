@@ -136,8 +136,20 @@ extension AnalyticsKit: AnalyticsProtocol {
         providers.forEach { $0.getAndSaveToken() }
     }
     
-    public func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) {
-        providers.forEach { $0.sendEventOrderCreated(event, revenue: revenue, transactionId: transactionId) }
+    public func sendEventOrderCreated<Event>(_ event: Event, revenue: Double?, currencyCode: String?, transactionId: String?) where Event : AnalyticsEventProtocol {
+        providers.forEach {
+            let providerType = AnalyticProviderType.getType(from: $0)
+            var eventName: String { event.name(for: providerType) }
+            
+            guard event.getPermissionToSentEvent(event, from: nil, for: providerType) else { return }
+            
+            $0.sendEventOrderCreated(
+                eventName,
+                revenue: revenue,
+                currencyCode: currencyCode,
+                transactionId: transactionId
+            )
+        }
     }
 }
 
@@ -156,6 +168,7 @@ private extension AnalyticsKit {
             } else {
                 showInConcoleWrongProviderImplementation()
             }
+            
         case .amplitudeSettings(let accountToken, let trackingPermission):
             if provider is AmplitudeProvider {
                 if let accountToken = accountToken { provider.setAccountToken(accountToken) }
@@ -163,6 +176,7 @@ private extension AnalyticsKit {
             } else {
                 showInConcoleWrongProviderImplementation()
             }
+            
         case .cleverTapSettings(let accountId, let accountToken, let networkInfoPermission, let deviceToken):
             if provider is CleverTapProvider {
                 if let accountId = accountId { provider.setAccountId(accountId) }
@@ -172,6 +186,7 @@ private extension AnalyticsKit {
             } else {
                 showInConcoleWrongProviderImplementation()
             }
+            
         case .googleAnalyticsSettings(let completion, let deviceToken):
             if provider is GoogleAnalyticsProvider {
                 if let completion = completion { provider.setPushTokenCompletion(completion) }

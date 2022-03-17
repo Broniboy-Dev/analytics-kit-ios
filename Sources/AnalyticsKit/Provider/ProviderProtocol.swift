@@ -64,7 +64,7 @@ public protocol ProviderProtocol: AnyObject {
     
     /// Calls the provider's own SDK method to send data.
     /// - Parameters:
-    ///   - event: Prepared (formatted) event name
+    ///   - event: Formatted event name
     ///   - params: Additional parameters available for the event
     func sendEvent(_ event: String, with params: [String: Any])
     
@@ -113,7 +113,14 @@ public protocol ProviderProtocol: AnyObject {
     
     // TODO: Refactoring
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
-    func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?)
+    
+    /// Sends a special event with a boolean type "user placed an order"
+    /// - Parameters:
+    ///   - event: Formatted event name
+    ///   - revenue: Advertising revenue information
+    ///   - currencyCode: Code of currency in ISO 4217
+    ///   - transactionId: Optional ID to avoid tracking duplicate events
+    func sendEventOrderCreated(_ event: String, revenue: Double?, currencyCode: String?, transactionId: String?)
 }
 
 extension ProviderProtocol {
@@ -131,5 +138,5 @@ extension ProviderProtocol {
     func sendEventCrash(with error: Error) { }
     func sendEventCrash(with message: String) { }
     func getAndSaveToken() { }
-    func sendEventOrderCreated(_ event: String, revenue: Double?, transactionId: String?) { }
+    func sendEventOrderCreated(_ event: String, revenue: Double?, currencyCode: String?, transactionId: String?) { }
 }

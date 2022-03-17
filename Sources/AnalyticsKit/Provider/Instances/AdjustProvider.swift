@@ -77,15 +77,14 @@ class AdjustProvider: NSObject, ProviderProtocol {
     
     func sendEventOrderCreated(
         _ event: String,
-        revenue: Double? = nil,
-        transactionId: String? = nil
+        revenue: Double?,
+        currencyCode: String?,
+        transactionId: String?
     ) {
         guard let adjustEvent = ADJEvent(eventToken: event) else { return }
 
-        // TODO: Refactoring
-        // RUB - hardcode
-        if let revenue = revenue {
-            adjustEvent.setRevenue(revenue, currency: "RUB")
+        if let revenue = revenue, let currencyCode = currencyCode  {
+            adjustEvent.setRevenue(revenue, currency: currencyCode)
         }
 
         if let transactionId = transactionId {
