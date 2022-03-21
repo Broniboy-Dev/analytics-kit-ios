@@ -82,9 +82,7 @@ public protocol ProviderProtocol: AnyObject {
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func sendTags(_ tags: [String: AnyHashable])
     
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
-    func sendEventRevenue(with params: [String: Any])
+    func sendEventRevenue(for provider: ProviderRevenue)
     
     /// Handles push notification touch
     /// - Parameters:
@@ -110,23 +108,11 @@ public protocol ProviderProtocol: AnyObject {
     // TODO: Refactoring
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     func getAndSaveToken()
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
-    
-    /// Sends a special event with a boolean type "user placed an order"
-    /// - Parameters:
-    ///   - event: Formatted event name
-    ///   - revenue: Advertising revenue information
-    ///   - currencyCode: Code of currency in ISO 4217
-    ///   - transactionId: Optional ID to avoid tracking duplicate events
-    func sendEventOrderCreated(_ event: String, revenue: Double?, currencyCode: String?, transactionId: String?)
 }
 
 extension ProviderProtocol {
     func sendEvent(with params: [AnyHashable : Any], and items: [Any]) { }
     func sendTags(_ tags: [String: AnyHashable]) { }
-    func sendEventRevenue(with params: [String: Any]) { }
     func setDeviceToken(_ deviceToken: Data) { }
     func setAccountId(_ id: String) { }
     func setAccountToken(_ token: String) { }
@@ -138,5 +124,4 @@ extension ProviderProtocol {
     func sendEventCrash(with error: Error) { }
     func sendEventCrash(with message: String) { }
     func getAndSaveToken() { }
-    func sendEventOrderCreated(_ event: String, revenue: Double?, currencyCode: String?, transactionId: String?) { }
 }

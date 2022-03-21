@@ -10,8 +10,6 @@ import Adjust
 import CoreLocation
 
 class AdjustProvider: NSObject, ProviderProtocol {
-    // MARK: - Properties
-    
     private var accountToken: String? = nil
     private var environment: String? = nil
     var type: AnalyticProviderType = .adjust
@@ -75,23 +73,10 @@ class AdjustProvider: NSObject, ProviderProtocol {
         Adjust.trackEvent(adjustEvent)
     }
     
-    func sendEventOrderCreated(
-        _ event: String,
-        revenue: Double?,
-        currencyCode: String?,
-        transactionId: String?
-    ) {
-        guard let adjustEvent = ADJEvent(eventToken: event) else { return }
-
-        if let revenue = revenue, let currencyCode = currencyCode  {
-            adjustEvent.setRevenue(revenue, currency: currencyCode)
+    func sendEventRevenue(for provider: ProviderRevenue) {
+        if case .adjust(let info) = provider {
+            Adjust.trackEvent(info)
         }
-
-        if let transactionId = transactionId {
-            adjustEvent.setTransactionId(transactionId)
-        }
-
-        Adjust.trackEvent(adjustEvent)
     }
 }
 

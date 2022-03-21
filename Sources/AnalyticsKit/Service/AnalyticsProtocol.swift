@@ -127,17 +127,14 @@ public protocol AnalyticsProtocol {
     // Do not use in other projects ⚠️
     func sendTags(_ tags: [String: AnyHashable])
     
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
-    // Do not use in other projects ⚠️
-    // Parameter passing is made of type String - this is not valid hardcode 😅😅😅
-    func sendEventRevenue(with params: [String: Any])
+    /// A special event for the provider, which will record data for a completed order / completed subscription, etc.
+    /// - Parameter provider: You can select a provider from case of `ProviderRevenue` and pass in the associated value the model that this analytics provider expects.
+    func sendEventRevenue(for provider: ProviderRevenue)
     
     /// Processes the user's fingers to push.
     /// - Parameter response: The user’s response to the notification. This object contains the original notification and the identifier string for the selected action. If the action allowed the user to provide a textual response, this parameter contains a `UNTextInputNotificationResponse` object.
     /// - Parameter completionHandler: A block that returns a tuple with a provider and data for its push notifications.
     func pressedPushNotification(with response: UNNotificationResponse, _ completionHandler: @escaping ([(AnalyticProviderType, [AnyHashable : Any])]) -> Void)
-    
     
     func sendEventCrash(with error: Error)
     
@@ -147,11 +144,6 @@ public protocol AnalyticsProtocol {
     // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
     // Do not use in other projects ⚠️
     func getAndSaveToken()
-    
-    // TODO: Refactoring
-    // Made to preserve the workflow of the BB client, but it seems that it needs some attention / refactoring.
-    // Do not use in other projects ⚠️
-    func sendEventOrderCreated<Event: AnalyticsEventProtocol>(_ event: Event, revenue: Double?, currencyCode: String?, transactionId: String?)
 }
 
 extension AnalyticsProtocol {
@@ -159,7 +151,7 @@ extension AnalyticsProtocol {
     public func register(_ provider: AnalyticProviderType, with settings: [ProviderSettings]) { }
     public func sendEvent(with params: [Param : Any], and items: [Any]?) { }
     public func sendTags(_ tags: [String: AnyHashable]) { }
-    public func sendEventRevenue(with params: [String: Any]) { }
+    public func sendEventRevenue(for provider: ProviderRevenue) { }
     public func sendEventCrash(with error: Error) { }
     public func sendEventCrash(with message: String) { }
     

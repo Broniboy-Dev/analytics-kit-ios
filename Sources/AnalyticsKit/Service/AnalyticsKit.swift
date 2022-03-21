@@ -102,9 +102,16 @@ extension AnalyticsKit: AnalyticsProtocol {
         }
     }
     
-    public func sendEventRevenue(with params: [String: Any]) {
+    public func sendEventRevenue(for provider: ProviderRevenue) {
         utilityQueue.sync {
-            providers.forEach { $0.sendEventRevenue(with: params) }
+            switch provider {
+            case .appMetrica:
+                providers.first(where: { $0.type == .appMetrica })?.sendEventRevenue(for: provider)
+            case .adjust:
+                providers.first(where: { $0.type == .adjust })?.sendEventRevenue(for: provider)
+            case .amplitude:
+                providers.first(where: { $0.type == .amplitude })?.sendEventRevenue(for: provider)
+            }
         }
     }
     
@@ -134,22 +141,6 @@ extension AnalyticsKit: AnalyticsProtocol {
     
     public func getAndSaveToken() {
         providers.forEach { $0.getAndSaveToken() }
-    }
-    
-    public func sendEventOrderCreated<Event>(_ event: Event, revenue: Double?, currencyCode: String?, transactionId: String?) where Event : AnalyticsEventProtocol {
-        providers.forEach {
-            let providerType = AnalyticProviderType.getType(from: $0)
-            var eventName: String { event.name(for: providerType) }
-            
-            guard event.getPermissionToSentEvent(event, from: nil, for: providerType) else { return }
-            
-            $0.sendEventOrderCreated(
-                eventName,
-                revenue: revenue,
-                currencyCode: currencyCode,
-                transactionId: transactionId
-            )
-        }
     }
 }
 
@@ -191,6 +182,13 @@ private extension AnalyticsKit {
             if provider is GoogleAnalyticsProvider {
                 if let completion = completion { provider.setPushTokenCompletion(completion) }
                 if let deviceToken = deviceToken { provider.setDeviceToken(deviceToken) }
+            } else {
+                showInConcoleWrongProviderImplementation()
+            }
+            
+        case .appMetricaSettings(let accountToken):
+            if provider is AppMetricaProvider {
+                if let accountToken = accountToken { provider.setAccountToken(accountToken) }
             } else {
                 showInConcoleWrongProviderImplementation()
             }
