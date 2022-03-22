@@ -7,6 +7,7 @@
 
 public enum AnalyticProviderType {
     case adjust
+    case appMetrica
     case amplitude
     case cleverTap
     case googleAnalytics
@@ -16,6 +17,8 @@ public enum AnalyticProviderType {
         switch type {
         case .adjust:
             self = .adjust
+        case .appMetrica:
+            self = .appMetrica
         case .amplitude:
             self = .amplitude
         case .cleverTap:
@@ -31,6 +34,8 @@ public enum AnalyticProviderType {
         switch self {
         case .adjust:
             return AdjustProvider()
+        case .appMetrica:
+            return AppMetricaProvider()
         case .amplitude:
             return AmplitudeProvider()
         case .cleverTap:
@@ -42,9 +47,13 @@ public enum AnalyticProviderType {
         }
     }
     
+    // TODO: Refactoring
+    // You can use the type from the ProviderProtocol. Can remove this method
     static func getType(from instance: ProviderProtocol) -> AnalyticProviderType {
         if instance is AdjustProvider {
             return .adjust
+        } else if instance is AppMetricaProvider {
+            return .appMetrica
         } else if instance is AmplitudeProvider {
             return .amplitude
         } else if instance is CleverTapProvider {
@@ -63,9 +72,10 @@ extension AnalyticProviderType: Equatable {
     public static func == (lhs: AnalyticProviderType, rhs: AnalyticProviderType) -> Bool {
         switch (lhs, rhs) {
         case (.adjust, .adjust),
-             (.amplitude, .amplitude),
-             (.cleverTap, .cleverTap),
-             (.googleAnalytics, .googleAnalytics):
+            (.appMetrica, .appMetrica),
+            (.amplitude, .amplitude),
+            (.cleverTap, .cleverTap),
+            (.googleAnalytics, .googleAnalytics):
             return true
 
         case let (.other(left), .other(right)):

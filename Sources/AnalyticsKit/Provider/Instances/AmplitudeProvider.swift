@@ -19,6 +19,8 @@ class AmplitudeProvider: ProviderProtocol {
     var type: AnalyticProviderType = .amplitude
     var pushNotificationCustomExtras: [AnyHashable : Any]?
     
+    // MARK: - ProviderProtocol
+    
     func register() {
         if let token = accountToken {
             Amplitude.instance().initializeApiKey(token)
@@ -60,23 +62,10 @@ class AmplitudeProvider: ProviderProtocol {
         Amplitude.instance().setUserProperties(tags)
     }
     
-    func sendEventRevenue(with params: [String: Any]) {
-        let revenue = AMPRevenue()
-        // TODO: Refactoring
-        // 😅😅😅😅😅😅😅
-        if let quantity = params["Quantity"] as? Int {
-            revenue.setQuantity(quantity)
+    func sendEventRevenue(for provider: ProviderRevenue) {
+        if case .amplitude(let info) = provider {
+            Amplitude.instance().logRevenueV2(info)
         }
-        
-        if let type = params["RevenueType"] as? String {
-            revenue.setRevenueType(type)
-        }
-        
-        if let price = params["Price"] as? NSNumber {
-            revenue.setPrice(price)
-        }
-        
-        Amplitude.instance().logRevenueV2(revenue)
     }
     
     func setTrackingSessionEventsPermission(_ permission: Bool?) {

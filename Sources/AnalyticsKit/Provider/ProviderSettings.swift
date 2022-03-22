@@ -46,4 +46,12 @@ public enum ProviderSettings {
         - deviceToken: User device token
      */
     case googleAnalyticsSettings(pushTokenCompletion: ((String) -> Void)?, deviceToken: Data?)
+    
+    /**
+     Use this case to set up only a `YandexMobileMetrica (AppMetrica)` provider
+     
+     - Parameters:
+        - accountToken: Your account token (aka API token / key) from AppMetrica. [More info](https://appmetrica.yandex.ru/docs/mobile-sdk-dg/tasks/ios-quickstart.html)
+     */
+    case appMetricaSettings(accountToken: String?)
 }

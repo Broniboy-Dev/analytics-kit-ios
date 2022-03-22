@@ -23,4 +23,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'FirebaseAnalytics'
   spec.dependency 'FirebaseCrashlytics'
   spec.dependency 'FirebaseMessaging'
+  spec.dependency 'YandexMobileMetrica'
 end

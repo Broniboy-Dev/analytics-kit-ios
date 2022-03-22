@@ -46,7 +46,8 @@ let package = Package(
                 .product(name: "FirebaseAuth", package: "Firebase"),
                 .product(name: "FirebaseAnalytics", package: "Firebase"),
                 .product(name: "FirebaseCrashlytics", package: "Firebase"),
-                .product(name: "FirebaseMessaging", package: "Firebase")
+                .product(name: "FirebaseMessaging", package: "Firebase"),
+                .product(name: "YandexMobileMetrica", package: "YandexMobileMetrica")
             ]
         ),
         .testTarget(

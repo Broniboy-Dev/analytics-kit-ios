@@ -20,7 +20,7 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     var pushNotificationCustomExtras: [AnyHashable : Any]?
     private var pushTokenCompletion: ((String) -> Void)?
     
-    // MARK: - Module functions
+    // MARK: - ProviderProtocol
     
     func register() {
         // TODO: Not sure if Messaging delegate assignment is always required
@@ -68,7 +68,11 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
     
     func sendEvent(with params: [AnyHashable : Any], and items: [Any]) {
         // TODO: Explore this case in more detail
-        print("Google Analytics has no analogue of this function")
+        print("[AnalyticsKit/Firebase] Google Analytics has no analogue of this function")
+    }
+    
+    func sendEventRevenue(for provider: ProviderRevenue) {
+        print("[AnalyticsKit/Firebase] Has no implementation of Revenue for GoogleAnalytics")
     }
     
     func setPushTokenCompletion(_ completion: @escaping (String) -> Void) {
@@ -97,6 +101,8 @@ class GoogleAnalyticsProvider: NSObject, ProviderProtocol {
         }
     }
 }
+
+// MARK: - MessagingDelegate
 
 extension GoogleAnalyticsProvider: MessagingDelegate {
     func messaging(

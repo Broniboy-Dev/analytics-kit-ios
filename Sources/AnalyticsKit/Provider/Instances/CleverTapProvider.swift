@@ -84,6 +84,10 @@ class CleverTapProvider: NSObject, ProviderProtocol {
     func enableDeviceNetworkInfoReporting(_ permission: Bool?) {
         isDeviceNetworkInfoReportingEnable = permission
     }
+    
+    func sendEventRevenue(for provider: ProviderRevenue) {
+        print("[AnalyticsKit/Firebase] Has no implementation of Revenue for CleverTap")
+    }
 }
 
 // MARK: - CleverTapPushNotificationDelegate
